@@ -1,0 +1,27 @@
+jobs:
+- sparkJob:
+    args:
+    - gs://<your-googlecloud-project-name>/public/receita-federal/landing/
+    - <your-googlecloud-project-name>:stg_receita_federal
+    jarFileUris:
+    - gs://<your-googlecloud-project-name>/lib/receita_federal.jar
+    mainClass: br.com.bruno.data.ingestion.receitafederal.Starter
+    properties:
+      spark.executor.cores: '6'
+      spark.executor.memory: 10g
+  stepId: receita-federal
+placement:
+  managedCluster:
+    clusterName: receita-federal-cluster-temp
+    config:
+      gceClusterConfig:
+        zoneUri: us-east1-b
+        networkUri: projects/<your-googlecloud-project-name>/global/networks/default
+      masterConfig:
+        diskConfig:
+          bootDiskSizeGb: 30
+          bootDiskType: pd-standard
+        machineTypeUri: n1-standard-8
+      softwareConfig:
+        properties:
+          dataproc:dataproc.allow.zero.workers: 'true'
